@@ -7,6 +7,30 @@
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
+    "expo": {
+      "android": {
+        "googleServicesFile": "./google-services.json",
+        "package": "com.dailyDiet"
+      },
+      "ios": {
+        "googleServicesFile": "./GoogleService-Info.plist",
+        "bundleIdentifier": "com.dailyDiet"
+      },
+      "plugins": [
+        "@react-native-firebase/app",
+        "@react-native-firebase/auth",
+        "@react-native-firebase/firestore",
+        "@react-native-firebase/storage",
+        [
+          "expo-build-properties",
+          {
+            "ios": {
+              "useFrameworks": "static"
+            }
+          }
+        ]
+      ]
+    },
     "splash": {
       "image": "./assets/splash.png",
       "resizeMode": "contain",
@@ -19,7 +43,8 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.anonymous.dailydiet"
     },
     "web": {
       "favicon": "./assets/favicon.png"

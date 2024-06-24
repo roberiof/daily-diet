@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "887621337625",
+    "project_id": "daily-diet-cb60a",
+    "storage_bucket": "daily-diet-cb60a.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:887621337625:android:8e044194c57d76bad02088",
+        "android_client_info": {
+          "package_name": "com.dailydiet"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBFsxfDRVsw0N5jv3jimhj190I3BbxMC9U"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

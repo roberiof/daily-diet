@@ -33,3 +33,9 @@ yarn-error.*
 
 # typescript
 *.tsbuildinfo
+
+<<<<<<< Updated upstream
+/android/
+=======
+/android
+>>>>>>> Stashed changes
