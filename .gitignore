@@ -34,11 +34,7 @@ yarn-error.*
 # typescript
 *.tsbuildinfo
 
-<<<<<<< Updated upstream
-/android/
-=======
 /android
->>>>>>> Stashed changes
 
 GoogleService-Info.plist
 google-services.json
