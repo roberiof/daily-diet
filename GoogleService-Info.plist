@@ -3,17 +3,17 @@
 <plist version="1.0">
 <dict>
 	<key>API_KEY</key>
-	<string>AIzaSyDZ9oZXVpUYJAVwKlNFyc7sQgga08A1FmI</string>
+	<string>AIzaSyCxXFdUumk7WLPRVFlY1U0_fhVjjcULw6w</string>
 	<key>GCM_SENDER_ID</key>
-	<string>887621337625</string>
+	<string>895871179015</string>
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.dailyDiet</string>
+	<string>com.daily-diet</string>
 	<key>PROJECT_ID</key>
-	<string>daily-diet-cb60a</string>
+	<string>daily-bdfc7</string>
 	<key>STORAGE_BUCKET</key>
-	<string>daily-diet-cb60a.appspot.com</string>
+	<string>daily-bdfc7.appspot.com</string>
 	<key>IS_ADS_ENABLED</key>
 	<false></false>
 	<key>IS_ANALYTICS_ENABLED</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:887621337625:ios:0556689226ce7220d02088</string>
+	<string>1:895871179015:ios:5aa4d4d5222e4f007b4da2</string>
 </dict>
 </plist>

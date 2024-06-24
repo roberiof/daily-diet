@@ -39,3 +39,6 @@ yarn-error.*
 =======
 /android
 >>>>>>> Stashed changes
+
+GoogleService-Info.plist
+google-services.json
