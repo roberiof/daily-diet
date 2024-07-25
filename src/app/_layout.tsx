@@ -10,6 +10,7 @@ import { StatusBar } from "react-native";
 
 import Loading from "@/components/atoms/Loading/Loading";
 import { AuthContextData, AuthProvider, useAuth } from "@/providers/Auth";
+import Toast from "react-native-toast-message";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -18,7 +19,7 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(auth)"
+  initialRouteName: "(public)"
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
@@ -54,6 +55,7 @@ const RootLayout = () => {
         backgroundColor={"transparent"}
       />
       <RootLayoutNav userUid={userUid} />
+      <Toast />
     </AuthProvider>
   );
 };
@@ -64,17 +66,11 @@ const RootLayoutNav = ({
   userUid: AuthContextData["userUid"];
 }) => {
   console.log(userUid);
-  console.log(!userUid);
-
-  if (!userUid) {
+  if (userUid) {
     return (
       <Stack>
         <Stack.Screen
-          name="(public)/sign-in"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="(public)/sign-up"
+          name="(authenticated)/index"
           options={{ headerShown: false }}
         />
       </Stack>
@@ -83,7 +79,8 @@ const RootLayoutNav = ({
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(public)/sign-in" options={{ headerShown: false }} />
+      <Stack.Screen name="(public)/sign-up" options={{ headerShown: false }} />
     </Stack>
   );
 };

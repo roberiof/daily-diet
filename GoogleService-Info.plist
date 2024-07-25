@@ -9,7 +9,7 @@
 	<key>PLIST_VERSION</key>
 	<string>1</string>
 	<key>BUNDLE_ID</key>
-	<string>com.daily-diet</string>
+	<string>com.dailyDiet</string>
 	<key>PROJECT_ID</key>
 	<string>daily-bdfc7</string>
 	<key>STORAGE_BUCKET</key>
@@ -25,6 +25,6 @@
 	<key>IS_SIGNIN_ENABLED</key>
 	<true></true>
 	<key>GOOGLE_APP_ID</key>
-	<string>1:895871179015:ios:5aa4d4d5222e4f007b4da2</string>
+	<string>1:895871179015:ios:8f0e67f58f3144b47b4da2</string>
 </dict>
 </plist>
