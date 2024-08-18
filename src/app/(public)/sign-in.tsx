@@ -7,9 +7,9 @@ import Button from "@atoms/Button/Button";
 import Input from "@atoms/Input/Input";
 import logo from "@assets/public/logo-bigger.png";
 import SignInFormSchema from "@/validations/signIn";
-import { authServices } from "@/services/auth";
 import { Link, router } from "expo-router";
 import Toast from "react-native-toast-message";
+import { loginWithEmailAndPassword } from "@/services/auth";
 
 type SignInForm = z.infer<typeof SignInFormSchema>;
 
@@ -24,7 +24,7 @@ export default function SignIn() {
   });
 
   const handleForm = async (data: SignInForm) => {
-    const { error } = await authServices.loginWithInternalService(
+    const { error } = await loginWithEmailAndPassword(
       data.email,
       data.password
     );

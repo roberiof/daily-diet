@@ -8,14 +8,12 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import Button from "@atoms/Button/Button";
 import Input from "@atoms/Input/Input";
 import SignUpFormSchema from "@/validations/signUp";
-import { authServices } from "@/services/auth";
 import ImagePickerComponent from "@/components/atoms/ImagePicker/imagePicker";
-import FirestoreService from "@/services/firestore";
 import { UserEntity } from "@/common/entities/User";
-import FirebaseStorageService from "@/services/firebase-storage";
+import { uploadImageToStorage } from "@/services/firebase-storage";
+import { createUserWithEmailAndPassword } from "@/services/auth";
+import { setFirestoreDoc } from "@/services/firestore";
 
-const usersFirestore = new FirestoreService<Omit<UserEntity, "id">>("users");
-const storageFbImages = new FirebaseStorageService("images");
 type SignUpForm = z.infer<typeof SignUpFormSchema>;
 
 export default function SignUp() {
@@ -38,17 +36,22 @@ export default function SignUp() {
     }
     let imageUrl: string | null = null;
 
-    storageFbImages
-      .uploadImage("Imagem 1", data.image)
-      .then((response) => (imageUrl = response))
-      .catch(() =>
-        Toast.show({
-          type: "error",
-          text1: "Image upload went wrong. Try again later"
-        })
-      );
+    const uploadData = await uploadImageToStorage(
+      "/images",
+      data.image,
+      data.image
+    );
 
-    const { error, userId } = await authServices.createUserWithInternalService(
+    imageUrl = uploadData.downloadURL as string;
+
+    if (uploadData.error) {
+      Toast.show({
+        type: "error",
+        text1: "Image upload went wrong. Try again later"
+      });
+    }
+
+    const { error, userId } = await createUserWithEmailAndPassword(
       data.email,
       data.password
     );
@@ -62,7 +65,7 @@ export default function SignUp() {
       return;
     }
 
-    usersFirestore.createDoc(userId, {
+    setFirestoreDoc<Omit<UserEntity, "id">>(`/users/userId`, {
       email: data.email,
       name: data.name,
       image: imageUrl

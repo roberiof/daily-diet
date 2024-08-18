@@ -1,66 +1,79 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import firestore, {
-  FirebaseFirestoreTypes
-} from "@react-native-firebase/firestore";
+import firestore from "@react-native-firebase/firestore";
 
-class FirestoreService<T extends Record<string, any>> {
-  private collectionRef: FirebaseFirestoreTypes.CollectionReference<FirebaseFirestoreTypes.DocumentData>;
-
-  constructor(collectionName: string) {
-    this.collectionRef = firestore().collection(collectionName);
+export const setFirestoreDoc = async <T extends Record<string, any>>(
+  documentRef: string,
+  data: T
+) => {
+  try {
+    await firestore().doc(documentRef).set(data);
+    return { error: null };
+  } catch (error) {
+    console.error("Error creating document: ", error);
+    return { error: "Error creating document" };
   }
+};
 
-  async createDoc(docId: string, data: T): Promise<void> {
-    try {
-      await this.collectionRef.doc(docId).set(data);
-    } catch (error) {
-      console.error("Error creating document: ", error);
-      throw new Error("Error creating document");
+export const addFirestoreDoc = async <T extends Record<string, any>>(
+  collectionRef: string,
+  data: T
+) => {
+  try {
+    await firestore().collection(collectionRef).add(data);
+  } catch (error) {
+    console.error("Error creating document: ", error);
+    throw new Error("Error creating document");
+  }
+};
+
+export const updateFirestoreDoc = async <T extends Record<string, any>>(
+  documentRef: string,
+  data: Partial<T>
+) => {
+  try {
+    await firestore().doc(documentRef).update(data);
+    return { error: null };
+  } catch (error) {
+    console.error("Error updating document: ", error);
+    return { error: "Error updating document" };
+  }
+};
+
+export const deleteFirestoreDoc = async (documentRef: string) => {
+  try {
+    await firestore().doc(documentRef).delete();
+    return { error: null };
+  } catch (error) {
+    console.error("Error deleting document: ", error);
+    return { error: "Error deleting document" };
+  }
+};
+
+export const getFirestoreDoc = async <T extends Record<string, any>>(
+  documentRef: string
+): Promise<{ data: T; error: null } | { data: null; error: string }> => {
+  try {
+    const doc = await firestore().doc(documentRef).get();
+    if (doc.exists) {
+      return { data: doc.data() as T, error: null };
+    } else {
+      return { data: null, error: "No such document" };
     }
+  } catch (error) {
+    console.error("Error getting document: ", error);
+    return { data: null, error: "Error getting document" };
   }
+};
 
-  async updateDoc(docId: string, data: Partial<T>): Promise<void> {
-    try {
-      await this.collectionRef.doc(docId).update(data);
-    } catch (error) {
-      console.error("Error updating document: ", error);
-      throw new Error("Error updating document");
-    }
+export const getAllFirestoreDocs = async <T extends Record<string, any>>(
+  collectionRef: string
+): Promise<{ data: T[]; error: string | null }> => {
+  try {
+    const snapshot = await firestore().collection(collectionRef).get();
+    const data = snapshot.docs.map((doc) => doc.data() as T);
+    return { data, error: null };
+  } catch (error) {
+    console.error("Error getting collection: ", error);
+    return { data: [], error: "Error getting collection" };
   }
-
-  async deleteDoc(docId: string): Promise<void> {
-    try {
-      await this.collectionRef.doc(docId).delete();
-    } catch (error) {
-      console.error("Error deleting document: ", error);
-      throw new Error("Error deleting document");
-    }
-  }
-
-  async getDoc(docId: string): Promise<T | null> {
-    try {
-      const doc = await this.collectionRef.doc(docId).get();
-      if (doc.exists) {
-        return doc.data() as T;
-      } else {
-        console.log("No such document!");
-        return null;
-      }
-    } catch (error) {
-      console.error("Error getting document: ", error);
-      throw new Error("Error getting document");
-    }
-  }
-
-  async getAllDocs(): Promise<T[]> {
-    try {
-      const snapshot = await this.collectionRef.get();
-      return snapshot.docs.map((doc) => doc.data() as T);
-    } catch (error) {
-      console.error("Error getting collection: ", error);
-      throw new Error("Error getting collection");
-    }
-  }
-}
-
-export default FirestoreService;
+};

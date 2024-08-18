@@ -1,41 +1,48 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import auth from "@react-native-firebase/auth";
 
-export class AuthServicesClass {
-  async loginWithInternalService(
-    email: string,
-    password: string
-  ): Promise<{ error: null | string }> {
-    return new Promise((resolve) => {
-      auth()
-        .signInWithEmailAndPassword(email, password)
-        .then(() => {
-          resolve({
-            error: null
-          });
-        })
-        .catch((error) => {
-          console.log(error);
-          resolve(error);
-        });
-    });
-  }
+export const loginWithEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<{ error: null | string }> => {
+  try {
+    await auth().signInWithEmailAndPassword(email, password);
+    return { error: null };
+  } catch (error: any) {
+    console.error("Error logging in: ", error);
 
-  async createUserWithInternalService(
-    email: string,
-    password: string
-  ): Promise<{ error: null | string; userId: string | null }> {
-    return new Promise((resolve) => {
-      auth()
-        .createUserWithEmailAndPassword(email, password)
-        .then((data) => {
-          resolve({ error: null, userId: data.user.uid });
-        })
-        .catch((error) => {
-          console.log(error);
-          resolve({ error: error.message, userId: null });
-        });
-    });
-  }
-}
+    let errorMessage = "An unexpected error occurred during login.";
 
-export const authServices = new AuthServicesClass();
+    switch (error.code) {
+      case "auth/invalid-email":
+        errorMessage = "The email address is invalid.";
+        break;
+      case "auth/user-disabled":
+        errorMessage = "This account has been disabled.";
+        break;
+      case "auth/user-not-found":
+        errorMessage = "No user found with this email.";
+        break;
+      case "auth/wrong-password":
+        errorMessage = "The password is incorrect.";
+        break;
+      default:
+        errorMessage = "An unexpected error occurred during login.";
+    }
+
+    return { error: errorMessage };
+  }
+};
+
+export const createUserWithEmailAndPassword = async (
+  email: string,
+  password: string
+): Promise<{ error: null | string; userId: string | null }> => {
+  try {
+    const data = await auth().createUserWithEmailAndPassword(email, password);
+    return { error: null, userId: data.user.uid };
+  } catch (error) {
+    console.error("Error creating user: ", error);
+    return { error: "Error in user creation", userId: null };
+  }
+};
