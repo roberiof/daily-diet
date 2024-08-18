@@ -7,10 +7,7 @@ import {
   useEffect,
   useState
 } from "react";
-import "../config/firebase";
-import { getAuth } from "firebase/auth";
-import firebaseApp from "../config/firebase";
-import { onAuthStateChanged } from "firebase/auth";
+import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
 
 interface AuthProviderProps {
   children: ReactNode;
@@ -22,32 +19,30 @@ export interface AuthContextData {
 }
 
 const AuthContext = createContext({} as AuthContextData);
-const auth = getAuth(firebaseApp);
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [userUid, setUserUid] = useState<string | null | undefined>(null);
   const [initializing, setInitializing] = useState(true);
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      console.log("auth enterred");
-      if (user) {
-        setUserUid(user.uid);
-        console.log("defined");
-      } else {
-        setUserUid(undefined);
-        console.log("undefined");
-      }
-      setInitializing(false);
-    });
+  const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
+    if (user) {
+      setUserUid(user.uid);
+    } else {
+      setUserUid(null);
+    }
 
-    return () => unsubscribe();
+    if (initializing) setInitializing(false);
+  };
+
+  useEffect(() => {
+    const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
+    return subscriber;
   }, []);
 
   if (initializing) {
     return (
       <View className="flex-1 items-center justify-center">
-        <ActivityIndicator color="#1836B2" size={48} />
+        <ActivityIndicator color="#000" size={48} />
       </View>
     );
   }

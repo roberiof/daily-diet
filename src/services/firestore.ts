@@ -1,145 +1,79 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import firestore from "@react-native-firebase/firestore";
-import { FirebaseError } from "firebase/app";
-import { DocumentData } from "firebase/firestore";
 
-type CollectionResponse<T> =
-  | { data: (T & { id: string })[]; error: null }
-  | { data: null; error: string };
-
-export const getFirestoreCollection = async <T extends DocumentData>({
-  collectionPath
-}: {
-  collectionPath: string;
-}): Promise<CollectionResponse<T>> => {
+export const setFirestoreDoc = async <T extends Record<string, any>>(
+  documentRef: string,
+  data: T
+) => {
   try {
-    const querySnapshot = await firestore().collection(collectionPath).get();
-    const finalData: (T & { id: string })[] = [];
-    if (querySnapshot.empty) {
-      return {
-        data: [],
-        error: null
-      };
-    }
-
-    querySnapshot.forEach((item) => {
-      const data = item.data() as T;
-
-      finalData.push({ ...data, id: item.id });
-    });
-
-    return {
-      data: finalData,
-      error: null
-    };
+    await firestore().doc(documentRef).set(data);
+    return { error: null };
   } catch (error) {
-    if (error instanceof FirebaseError) {
-      return {
-        error: error.message,
-        data: null
-      };
-    } else {
-      return {
-        error: error as string,
-        data: null
-      };
-    }
+    console.error("Error creating document: ", error);
+    return { error: "Error creating document" };
   }
 };
 
-// type DocumentResponse<T> =
-//   | { data: (T & { id: string }) | null; error: null }
-//   | { data: null; error: string };
+export const addFirestoreDoc = async <T extends Record<string, any>>(
+  collectionRef: string,
+  data: T
+) => {
+  try {
+    await firestore().collection(collectionRef).add(data);
+  } catch (error) {
+    console.error("Error creating document: ", error);
+    throw new Error("Error creating document");
+  }
+};
 
-// export const getFirestoreDoc = async <T extends DocumentData>({
-//   documentPath
-// }: {
-//   documentPath: string;
-// }): Promise<DocumentResponse<T>> => {
-//   try {
-//     const documentRef = doc(db, documentPath);
-//     const docSnapshot = await getDoc(documentRef);
+export const updateFirestoreDoc = async <T extends Record<string, any>>(
+  documentRef: string,
+  data: Partial<T>
+) => {
+  try {
+    await firestore().doc(documentRef).update(data);
+    return { error: null };
+  } catch (error) {
+    console.error("Error updating document: ", error);
+    return { error: "Error updating document" };
+  }
+};
 
-//     if (!docSnapshot.exists()) {
-//       return {
-//         data: null,
-//         error: null
-//       };
-//     }
+export const deleteFirestoreDoc = async (documentRef: string) => {
+  try {
+    await firestore().doc(documentRef).delete();
+    return { error: null };
+  } catch (error) {
+    console.error("Error deleting document: ", error);
+    return { error: "Error deleting document" };
+  }
+};
 
-//     const data = docSnapshot.data() as T;
+export const getFirestoreDoc = async <T extends Record<string, any>>(
+  documentRef: string
+): Promise<{ data: T; error: null } | { data: null; error: string }> => {
+  try {
+    const doc = await firestore().doc(documentRef).get();
+    if (doc.exists) {
+      return { data: doc.data() as T, error: null };
+    } else {
+      return { data: null, error: "No such document" };
+    }
+  } catch (error) {
+    console.error("Error getting document: ", error);
+    return { data: null, error: "Error getting document" };
+  }
+};
 
-//     return {
-//       data: { ...data, id: docSnapshot.id },
-//       error: null
-//     };
-//   } catch (error) {
-//     if (error instanceof FirebaseError) {
-//       return {
-//         error: error.message,
-//         data: null
-//       };
-//     } else {
-//       return {
-//         error: error as string,
-//         data: null
-//       };
-//     }
-//   }
-// };
-
-// export const createFirestoreDoc = async <T extends DocumentData>({
-//   collectionPath,
-//   data
-// }: {
-//   collectionPath: string;
-//   data: Omit<T, "id">;
-// }): Promise<{ error: string | null }> => {
-//   try {
-//     const collectionRef = collection(db, collectionPath);
-//     addDoc(collectionRef, data);
-
-//     return {
-//       error: null
-//     };
-//   } catch (error) {
-//     if (error instanceof FirebaseError) {
-//       return {
-//         error: error.message
-//       };
-//     } else {
-//       return {
-//         error: "An unknown error occurred"
-//       };
-//     }
-//   }
-// };
-
-// export const updateFirestoreDoc = async <T extends DocumentData>({
-//   documentPath,
-//   data
-// }: {
-//   documentPath: string;
-//   data: Partial<Omit<T, "id">>;
-// }): Promise<{ error: string | null }> => {
-//   try {
-//     const documentRef = doc(db, documentPath);
-
-//     await updateDoc(documentRef, {
-//       ...data
-//     });
-
-//     return {
-//       error: null
-//     };
-//   } catch (error) {
-//     if (error instanceof FirebaseError) {
-//       return {
-//         error: error.message
-//       };
-//     } else {
-//       return {
-//         error: "An unknown error occurred"
-//       };
-//     }
-//   }
-// };
+export const getAllFirestoreDocs = async <T extends Record<string, any>>(
+  collectionRef: string
+): Promise<{ data: T[]; error: string | null }> => {
+  try {
+    const snapshot = await firestore().collection(collectionRef).get();
+    const data = snapshot.docs.map((doc) => doc.data() as T);
+    return { data, error: null };
+  } catch (error) {
+    console.error("Error getting collection: ", error);
+    return { data: [], error: "Error getting collection" };
+  }
+};
