@@ -1,5 +1,5 @@
 import { View, Text, ScrollView } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { Link, router } from "expo-router";
 import Toast from "react-native-toast-message";
@@ -17,6 +17,8 @@ import { setFirestoreDoc } from "@/services/firestore";
 type SignUpForm = z.infer<typeof SignUpFormSchema>;
 
 export default function SignUp() {
+  const [loading, setLoading] = useState(false);
+
   const {
     handleSubmit,
     control,
@@ -35,6 +37,7 @@ export default function SignUp() {
       return;
     }
     let imageUrl: string | null = null;
+    setLoading(true);
 
     const uploadData = await uploadImageToStorage(
       "/images",
@@ -49,6 +52,7 @@ export default function SignUp() {
         type: "error",
         text1: "Image upload went wrong. Try again later"
       });
+      return;
     }
 
     const { error, userId } = await createUserWithEmailAndPassword(
@@ -65,7 +69,7 @@ export default function SignUp() {
       return;
     }
 
-    setFirestoreDoc<Omit<UserEntity, "id">>(`/users/userId`, {
+    setFirestoreDoc<Omit<UserEntity, "id">>(`users/${userId}`, {
       email: data.email,
       name: data.name,
       image: imageUrl
@@ -78,6 +82,7 @@ export default function SignUp() {
     });
     reset();
     router.push("/(authenticated)/home");
+    setLoading(true);
   };
 
   return (
@@ -93,6 +98,7 @@ export default function SignUp() {
         />
         <View className="w-full" style={{ gap: 16 }}>
           <Input
+            editable={!loading}
             error={errors["name"]?.message}
             control={control}
             name="name"
@@ -100,6 +106,7 @@ export default function SignUp() {
             placeholder="Enter your name"
           />
           <Input
+            editable={!loading}
             error={errors["email"]?.message}
             control={control}
             name="email"
@@ -107,6 +114,7 @@ export default function SignUp() {
             placeholder="Enter your email"
           />
           <Input
+            editable={!loading}
             error={errors["password"]?.message}
             control={control}
             name="password"
@@ -115,6 +123,7 @@ export default function SignUp() {
             placeholder="Enter your password"
           />
           <Input
+            editable={!loading}
             error={errors["password"]?.message}
             control={control}
             name="confirmPassword"
@@ -124,11 +133,13 @@ export default function SignUp() {
           />
         </View>
 
-        <Button onPress={handleSubmit(handleForm)}> Sign In </Button>
+        <Button onPress={handleSubmit(handleForm)} disabled={loading}>
+          Sign In
+        </Button>
 
         <Text>
           Already have an account?{" "}
-          <Link href={"/sign-in"} className="underline">
+          <Link href={"/sign-in"} className="underline" disabled={loading}>
             Sign in
           </Link>
         </Text>

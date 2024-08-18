@@ -1,5 +1,5 @@
 import { Image, ScrollView, Text, View } from "react-native";
-import React from "react";
+import React, { useState } from "react";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from "react-hook-form";
@@ -14,6 +14,7 @@ import { loginWithEmailAndPassword } from "@/services/auth";
 type SignInForm = z.infer<typeof SignInFormSchema>;
 
 export default function SignIn() {
+  const [loading, setLoading] = useState(false);
   const {
     handleSubmit,
     control,
@@ -24,6 +25,7 @@ export default function SignIn() {
   });
 
   const handleForm = async (data: SignInForm) => {
+    setLoading(true);
     const { error } = await loginWithEmailAndPassword(
       data.email,
       data.password
@@ -45,6 +47,7 @@ export default function SignIn() {
     });
     reset();
     router.push("/(authenticated)/home");
+    setLoading(false);
   };
 
   return (
@@ -55,6 +58,7 @@ export default function SignIn() {
       >
         <Image source={logo} className="mb-8" />
         <Input
+          editable={!loading}
           error={errors["email"]?.message}
           control={control}
           name="email"
@@ -62,6 +66,7 @@ export default function SignIn() {
           placeholder="Enter your email"
         />
         <Input
+          editable={!loading}
           error={errors["password"]?.message}
           control={control}
           name="password"
@@ -69,11 +74,13 @@ export default function SignIn() {
           secureTextEntry={true}
           placeholder="Enter your password"
         />
-        <Button onPress={handleSubmit(handleForm)}> Sign In </Button>
+        <Button onPress={handleSubmit(handleForm)} disabled={loading}>
+          Sign In
+        </Button>
 
         <Text>
           Do not have an account yet?{" "}
-          <Link href={"/sign-up"} className="underline">
+          <Link href={"/sign-up"} className="underline" disabled={loading}>
             Sign up
           </Link>
         </Text>
