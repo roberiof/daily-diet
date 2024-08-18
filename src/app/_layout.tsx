@@ -69,7 +69,7 @@ const RootLayoutNav = ({
 
   useEffect(() => {
     if (userUid) {
-      router.replace("/(authenticated)");
+      router.replace("/(authenticated)/home");
     } else {
       router.replace("/(public)/sign-in");
     }

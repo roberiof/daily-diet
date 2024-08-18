@@ -52,6 +52,7 @@ export default function SignUp() {
         type: "error",
         text1: "Image upload went wrong. Try again later"
       });
+      setLoading(false);
       return;
     }
 
@@ -66,6 +67,7 @@ export default function SignUp() {
         text1: "Register failed",
         text2: "Something went wrong. Try again later!"
       });
+      setLoading(false);
       return;
     }
 
