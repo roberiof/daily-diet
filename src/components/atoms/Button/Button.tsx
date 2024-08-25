@@ -1,5 +1,5 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { tv } from "tailwind-variants";
 
 import { ButtonProps } from "./types";
@@ -47,13 +47,12 @@ export default function Button({
       <Text
         className={`text-center font-bold flex items-center gap-2  ${textVariant[variant]}`}
       >
-        {["greenSelected", "greenNotSelected"].includes(variant) && (
+        {/* {["greenSelected", "greenNotSelected"].includes(variant) && (
           <View className="rounded-full w-[10px] h-[10px] bg-green-dark"></View>
         )}
         {["redSelected", "redNotSelected"].includes(variant) && (
           <View className="rounded-full w-[10px] h-[10px] bg-red-dark"></View>
-        )}
-
+        )} */}
         {children}
       </Text>
     </TouchableOpacity>
