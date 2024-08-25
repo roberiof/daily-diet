@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ActivityIndicator, View } from "react-native";
-import {
+import React, {
   ReactNode,
   createContext,
   useContext,
@@ -8,21 +8,19 @@ import {
   useState
 } from "react";
 import auth, { FirebaseAuthTypes } from "@react-native-firebase/auth";
-
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
-export interface AuthContextData {
-  userUid: string | null | undefined;
-  setUserUid: React.Dispatch<React.SetStateAction<string | null | undefined>>;
-}
+import { useProfile } from "@/hooks/queries/useProfile";
+import { AuthContextData } from "./types";
 
 const AuthContext = createContext({} as AuthContextData);
 
-export const AuthProvider = ({ children }: AuthProviderProps) => {
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userUid, setUserUid] = useState<string | null | undefined>(null);
   const [initializing, setInitializing] = useState(true);
+  const { data: user, isLoading } = useProfile(userUid ?? undefined);
+
+  // console.log(userUid);
+  // console.log(user);
+  // console.log(isLoading);
 
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
     if (user) {
@@ -39,7 +37,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return subscriber;
   }, []);
 
-  if (initializing) {
+  if (initializing || isLoading) {
     return (
       <View className="flex-1 items-center justify-center">
         <ActivityIndicator color="#000" size={48} />
@@ -50,8 +48,7 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   return (
     <AuthContext.Provider
       value={{
-        userUid,
-        setUserUid
+        user
       }}
     >
       {children}

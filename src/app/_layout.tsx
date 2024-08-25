@@ -9,8 +9,9 @@ import { SplashScreen, Stack, useRouter } from "expo-router";
 import { StatusBar } from "react-native";
 
 import Loading from "@/components/atoms/Loading/Loading";
-import { AuthContextData, AuthProvider, useAuth } from "@/providers/Auth";
+import { AuthProvider, useAuth } from "@/providers/Auth/Auth";
 import Toast from "react-native-toast-message";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -25,8 +26,9 @@ export const unstable_settings = {
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+const queryClient = new QueryClient();
+
 const RootLayout = () => {
-  const { userUid } = useAuth();
   const [loaded, error] = useFonts({
     NunitoSans_700Bold,
     NunitoSans_400Regular
@@ -48,32 +50,31 @@ const RootLayout = () => {
   }
 
   return (
-    <AuthProvider>
-      <StatusBar
-        barStyle="dark-content"
-        translucent
-        backgroundColor={"transparent"}
-      />
-      <RootLayoutNav userUid={userUid} />
-      <Toast />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <StatusBar
+          barStyle="dark-content"
+          translucent
+          backgroundColor={"transparent"}
+        />
+        <RootLayoutNav />
+        <Toast />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 
-const RootLayoutNav = ({
-  userUid
-}: {
-  userUid: AuthContextData["userUid"];
-}) => {
+const RootLayoutNav = () => {
+  const { user } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (userUid) {
-      router.replace("/(authenticated)");
+    if (user) {
+      router.replace("/(authenticated)/home");
     } else {
       router.replace("/(public)/sign-in");
     }
-  }, [userUid, router]);
+  }, [user, router]);
 
   return (
     <Stack>

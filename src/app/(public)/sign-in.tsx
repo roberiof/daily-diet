@@ -37,6 +37,7 @@ export default function SignIn() {
         text1: "Sign in failed",
         text2: "Something went wrong, try again later"
       });
+      setLoading(false);
       return;
     }
 
