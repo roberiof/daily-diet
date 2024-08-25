@@ -1,5 +1,9 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import firestore from "@react-native-firebase/firestore";
+import firestore, {
+  FirebaseFirestoreTypes
+} from "@react-native-firebase/firestore";
+
+import { FirestoreQueryModifier } from "./types";
 
 export const setFirestoreDoc = async <T extends Record<string, any>>(
   documentRef: string,
@@ -49,13 +53,13 @@ export const deleteFirestoreDoc = async (documentRef: string) => {
   }
 };
 
-export const getFirestoreDoc = async <T extends Record<string, any>>(
+export const getFirestoreDoc = async <T>(
   documentRef: string
 ): Promise<{ data: T; error: null } | { data: null; error: string }> => {
   try {
     const doc = await firestore().doc(documentRef).get();
     if (doc.exists) {
-      return { data: doc.data() as T, error: null };
+      return { data: { id: doc.id, ...doc.data() } as T, error: null };
     } else {
       return { data: null, error: "No such document" };
     }
@@ -65,15 +69,45 @@ export const getFirestoreDoc = async <T extends Record<string, any>>(
   }
 };
 
-export const getAllFirestoreDocs = async <T extends Record<string, any>>(
-  collectionRef: string
-): Promise<{ data: T[]; error: string | null }> => {
+export const getAllFirestoreDocs = async <T>(
+  collectionRef: string,
+  modifiers: FirestoreQueryModifier[] = []
+) => {
   try {
-    const snapshot = await firestore().collection(collectionRef).get();
+    let query: FirebaseFirestoreTypes.Query =
+      firestore().collection(collectionRef);
+
+    modifiers.forEach((modifier) => {
+      switch (modifier.type) {
+        case "where":
+          query = query.where(
+            modifier.fieldPath,
+            modifier.opStr,
+            modifier.value
+          );
+          break;
+        case "orderBy":
+          query = query.orderBy(modifier.fieldPath, modifier.directionStr);
+          break;
+        case "startAfter":
+          query = query.startAfter(modifier.value);
+          break;
+        case "limit":
+          query = query.limit(modifier.number);
+          break;
+      }
+    });
+
+    const snapshot = await query.get();
     const data = snapshot.docs.map((doc) => doc.data() as T);
-    return { data, error: null };
+    return data;
   } catch (error) {
-    console.error("Error getting collection: ", error);
-    return { data: [], error: "Error getting collection" };
+    if (error instanceof Error) {
+      throw new Error(`Some error occurred: ${error.message}`);
+    } else {
+      throw new Error(
+        "Failed to retrieve documents from Firestore: An unknown error occurred"
+      );
+    }
   }
 };
