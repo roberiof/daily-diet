@@ -10,9 +10,19 @@ const AuthLayout = () => {
           name="home"
           options={{ headerShown: false }}
         ></Stack.Screen>
-        {/* <Stack.Screen name="new-meal" options={{ headerShown: false }}>
-        {() => <NewMealScreen user={user} />}
-      </Stack.Screen>
+        <Stack.Screen
+          name="new-meal"
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="(static)/good-meal"
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        <Stack.Screen
+          name="(static)/bad-meal"
+          options={{ headerShown: false }}
+        ></Stack.Screen>
+        {/*
       <Stack.Screen name="see-meal" options={{ headerShown: false }}>
         {() => <SeeMealScreen user={user} />}
       </Stack.Screen>
