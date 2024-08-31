@@ -74,29 +74,29 @@ export const getAllFirestoreDocs = async <T>(
   modifiers: FirestoreQueryModifier[] = []
 ) => {
   try {
-    const query: FirebaseFirestoreTypes.Query =
+    let query: FirebaseFirestoreTypes.Query =
       firestore().collection(collectionRef);
 
-    // modifiers.forEach((modifier) => {
-    //   switch (modifier.type) {
-    //     case "where":
-    //       query = query.where(
-    //         modifier.fieldPath,
-    //         modifier.opStr,
-    //         modifier.value
-    //       );
-    //       break;
-    //     case "orderBy":
-    //       query = query.orderBy(modifier.fieldPath, modifier.directionStr);
-    //       break;
-    //     case "startAfter":
-    //       query = query.startAfter(modifier.value);
-    //       break;
-    //     case "limit":
-    //       query = query.limit(modifier.number);
-    //       break;
-    //   }
-    // });
+    modifiers.forEach((modifier) => {
+      switch (modifier.type) {
+        case "where":
+          query = query.where(
+            modifier.fieldPath,
+            modifier.opStr,
+            modifier.value
+          );
+          break;
+        case "orderBy":
+          query = query.orderBy(modifier.fieldPath, modifier.directionStr);
+          break;
+        case "startAfter":
+          query = query.startAfter(modifier.value);
+          break;
+        case "limit":
+          query = query.limit(modifier.number);
+          break;
+      }
+    });
 
     const snapshot = await query.get();
     const data = snapshot.docs.map((doc) => doc.data() as T);
