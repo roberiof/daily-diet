@@ -3,7 +3,7 @@ import Header from "@/components/molecules/Header/Header";
 import PercentageMeals from "@/components/molecules/PercentageMeals/PercentageMeals";
 import { router } from "expo-router";
 import React from "react";
-import { View, ScrollView } from "react-native";
+import { View } from "react-native";
 import { useAuthenticated } from "../../../templates/Authenticated/provider/AuthenticatedContext";
 import PaginatedMealCardsDates from "@/components/organisms/PaginatedMealCardsDates/PaginatedMealCardsDates";
 import Button from "@/components/atoms/Button/Button";
@@ -15,7 +15,7 @@ export default function Home() {
   return (
     <View className="flex-1">
       <Header />
-      <ScrollView className="px-4 space-y-8">
+      <View className="px-4 space-y-8">
         <PercentageMeals percentage={80} />
         <View className="space-y-2">
           <Text>Refeições</Text>
@@ -26,10 +26,10 @@ export default function Home() {
             </View>
           </Button>
         </View>
-        <View>
+        <View className="h-[50%]">
           <PaginatedMealCardsDates userId={user.id} />
         </View>
-      </ScrollView>
+      </View>
     </View>
   );
 }

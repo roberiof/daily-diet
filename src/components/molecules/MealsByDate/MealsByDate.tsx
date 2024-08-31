@@ -24,8 +24,8 @@ const MealsByDate: React.FC<MealsByDateProps> = ({
         </Text>
       )}
       <View className="flex">
-        {meals.map((item) => (
-          <MealCard mealData={item} key={item.id} />
+        {meals.map((item, index) => (
+          <MealCard mealData={item} key={index} />
         ))}
       </View>
     </View>
