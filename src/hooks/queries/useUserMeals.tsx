@@ -22,15 +22,15 @@ export const getUserMealsQueryFn = (
       fieldPath: "userId",
       opStr: "==",
       value: userId
+    },
+    {
+      type: "orderBy",
+      fieldPath: "date",
+      directionStr: "desc"
     }
   ];
 
   if (afterDate) {
-    modifiers.push({
-      type: "orderBy",
-      fieldPath: "date"
-    });
-
     modifiers.push({
       type: "startAfter",
       fieldPath: "date",

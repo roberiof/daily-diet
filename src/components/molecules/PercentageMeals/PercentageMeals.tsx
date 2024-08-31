@@ -14,7 +14,7 @@ const PercentageMeals = ({ percentage }: PercentageMealsProps) => {
     <View
       className={cn(
         "w-full flex  justify-center items-center rounded-[8px] px-4 py-5 h-[100px]",
-        isGoodPercentage ? "bg-green-light" : "bg-red-mid"
+        isGoodPercentage ? "bg-green-light" : "bg-red-light"
       )}
     >
       <Link href={"/stats-meals"} className="absolute top-3 right-3">

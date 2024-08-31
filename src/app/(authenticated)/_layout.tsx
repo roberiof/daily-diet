@@ -22,6 +22,10 @@ const AuthLayout = () => {
           name="(static)/bad-meal"
           options={{ headerShown: false }}
         ></Stack.Screen>
+        <Stack.Screen
+          name="stats-meals"
+          options={{ headerShown: false }}
+        ></Stack.Screen>
         {/*
       <Stack.Screen name="see-meal" options={{ headerShown: false }}>
         {() => <SeeMealScreen user={user} />}
@@ -29,9 +33,7 @@ const AuthLayout = () => {
       <Stack.Screen name="edit-meal" options={{ headerShown: false }}>
         {() => <EditMealScreen user={user} />}
       </Stack.Screen>
-      <Stack.Screen name="stats-meals" options={{ headerShown: false }}>
-        {() => <StatsMealsScreen user={user} />}
-      </Stack.Screen> */}
+      */}
       </Stack>
     </AuthenticatedTemplate>
   );
