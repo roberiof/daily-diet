@@ -3,10 +3,11 @@ import { View, Text } from "react-native";
 import MealCard from "../MealCard/MealCard";
 import { MealEntity } from "@/common/entities/Meal";
 import { cn } from "@/lib/utils";
+import { Timestamp } from "@/common/entities/Timestamp";
 
 interface MealsByDateProps {
   meals: MealEntity[];
-  date: Date;
+  date: Timestamp;
   className?: string;
 }
 
@@ -19,7 +20,7 @@ const MealsByDate: React.FC<MealsByDateProps> = ({
     <View className={cn("flex space-y-2 mb-4", className)}>
       {date && (
         <Text className="text-gray-700 font-bold text-[18px]">
-          {date.toLocaleDateString()}
+          {new Date(date.seconds * 1000).toLocaleDateString()}
         </Text>
       )}
       <View className="flex">

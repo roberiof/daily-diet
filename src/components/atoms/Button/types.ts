@@ -2,7 +2,7 @@ import { ReactElement } from "react";
 import { TouchableOpacityProps, StyleProp, ViewStyle } from "react-native";
 
 export interface ButtonProps extends TouchableOpacityProps {
-  children: ReactElement;
+  children: ReactElement | string;
   style?: StyleProp<ViewStyle>;
   variant?:
     | "outlined"

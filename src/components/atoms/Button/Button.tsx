@@ -45,14 +45,8 @@ export default function Button({
       {...rest}
     >
       <Text
-        className={`text-center font-bold flex items-center gap-2  ${textVariant[variant]}`}
+        className={`text-center font-bold flex  gap-2 ${textVariant[variant]}`}
       >
-        {/* {["greenSelected", "greenNotSelected"].includes(variant) && (
-          <View className="rounded-full w-[10px] h-[10px] bg-green-dark"></View>
-        )}
-        {["redSelected", "redNotSelected"].includes(variant) && (
-          <View className="rounded-full w-[10px] h-[10px] bg-red-dark"></View>
-        )} */}
         {children}
       </Text>
     </TouchableOpacity>

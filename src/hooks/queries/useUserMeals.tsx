@@ -3,7 +3,7 @@ import { getAllFirestoreDocs } from "@/services/firestore";
 import { FirestoreQueryModifier } from "@/services/firestore/types";
 import { useQuery } from "@tanstack/react-query";
 
-export const getProfileQueryKey = (
+export const getUserMealsQueryKey = (
   userId: string,
   afterDate?: Date,
   limitNumber?: number
@@ -11,7 +11,7 @@ export const getProfileQueryKey = (
   return ["meals", userId, afterDate, limitNumber];
 };
 
-export const getProfileQueryFn = (
+export const getUserMealsQueryFn = (
   userId: string,
   afterDate?: Date,
   limitNumber?: number
@@ -58,9 +58,11 @@ export const useUserMeals = ({
   limitNumber?: number;
 }) => {
   return useQuery({
-    queryKey: userId ? getProfileQueryKey(userId, afterDate, limitNumber) : [],
+    queryKey: userId
+      ? getUserMealsQueryKey(userId, afterDate, limitNumber)
+      : [],
     queryFn: userId
-      ? getProfileQueryFn(userId, afterDate, limitNumber)
+      ? getUserMealsQueryFn(userId, afterDate, limitNumber)
       : undefined,
     staleTime: 1000 * 60 * 45, // 45 minutes
     enabled: !!userId

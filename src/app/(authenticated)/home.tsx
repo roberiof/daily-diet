@@ -26,7 +26,7 @@ export default function Home() {
             </View>
           </Button>
         </View>
-        <View className="h-[100%]">
+        <View>
           <PaginatedMealCardsDates userId={user.id} />
         </View>
       </ScrollView>

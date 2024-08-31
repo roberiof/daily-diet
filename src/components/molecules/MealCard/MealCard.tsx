@@ -5,7 +5,7 @@ import React from "react";
 import { View, Text, Pressable } from "react-native";
 
 export default function MealCard({ mealData }: { mealData: MealEntity }) {
-  const { title, hour, isInDiet } = mealData;
+  const { name, date, isInsideDiet } = mealData;
 
   return (
     <Pressable
@@ -13,14 +13,19 @@ export default function MealCard({ mealData }: { mealData: MealEntity }) {
       onPress={() => router.push("/see-meal")}
     >
       <View className="flex flex-row space-x-2">
-        <Text className="text-grey-700 font-bold">{hour}</Text>
-        <View className="h-full w-[1px] bg-[#313131]" />
-        <Text className="text-gray-600">{title}</Text>
+        <Text className="text-base-gray-700 font-bold">
+          {new Date(date.seconds * 1000).toLocaleTimeString([], {
+            hour: "2-digit",
+            minute: "2-digit"
+          })}
+        </Text>
+        <View className="w-[1px] bg-base-gray-400" />
+        <Text className="text-base-gray-600">{name}</Text>
       </View>
       <View
         className={cn(
           "rounded-full w-[14px] h-[14px]",
-          isInDiet ? "bg-green-mid" : "bg-red-mid"
+          isInsideDiet ? "bg-green-mid" : "bg-red-mid"
         )}
       ></View>
     </Pressable>
