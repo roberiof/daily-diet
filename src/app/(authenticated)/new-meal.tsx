@@ -14,6 +14,8 @@ import { addFirestoreDoc } from "@/services/firestore";
 import { useQueryClient } from "@tanstack/react-query";
 import { useAuthenticated } from "../../../templates/Authenticated/provider/AuthenticatedContext";
 import { getUserMealsQueryKey } from "@/hooks/queries/useUserMeals";
+import { MealEntity } from "@/common/entities/Meal";
+import { Timestamp } from "@react-native-firebase/firestore";
 
 type AddMealForm = z.infer<typeof AddMealSchema>;
 
@@ -34,7 +36,13 @@ export default function NewMeal() {
 
   const handleForm = async (data: AddMealForm) => {
     setLoading(true);
-    await addFirestoreDoc("meals", data);
+    await addFirestoreDoc<MealEntity>("meals", {
+      date: Timestamp.fromDate(data.date),
+      isInsideDiet: data.isInsideDiet === "yes",
+      name: data.name,
+      userId: user.id,
+      description: data.description
+    });
     queryClient.invalidateQueries({
       queryKey: getUserMealsQueryKey(user.id)
     });
