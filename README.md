@@ -1,7 +1,11 @@
 <h1 align=center> DAILY DIET </h1>
 
+<div align=center>
 
 [daily-diet.webm](https://github.com/user-attachments/assets/9f9ed68c-aefa-47c4-8389-8df14f1f9272)
+  
+</div>
+
 
 
 <br>
