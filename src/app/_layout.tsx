@@ -5,11 +5,13 @@ import {
   NunitoSans_700Bold,
   NunitoSans_400Regular
 } from "@expo-google-fonts/nunito-sans";
-import { SplashScreen, Stack } from "expo-router";
+import { SplashScreen, Stack, useRouter } from "expo-router";
 import { StatusBar } from "react-native";
 
 import Loading from "@/components/atoms/Loading/Loading";
-import { AuthContextData, AuthProvider, useAuth } from "@/providers/Auth";
+import { AuthProvider, useAuth } from "@/providers/Auth/Auth";
+import Toast from "react-native-toast-message";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -18,14 +20,15 @@ export {
 
 export const unstable_settings = {
   // Ensure that reloading on `/modal` keeps a back button present.
-  initialRouteName: "(auth)"
+  initialRouteName: "(public)"
 };
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 
+const queryClient = new QueryClient();
+
 const RootLayout = () => {
-  const { userUid } = useAuth();
   const [loaded, error] = useFonts({
     NunitoSans_700Bold,
     NunitoSans_400Regular
@@ -33,7 +36,7 @@ const RootLayout = () => {
 
   useEffect(() => {
     if (error) throw error;
-    console.log(error);
+    // console.log(error);
   }, [error]);
 
   useEffect(() => {
@@ -47,43 +50,36 @@ const RootLayout = () => {
   }
 
   return (
-    <AuthProvider>
-      <StatusBar
-        barStyle="dark-content"
-        translucent
-        backgroundColor={"transparent"}
-      />
-      <RootLayoutNav userUid={userUid} />
-    </AuthProvider>
+    <QueryClientProvider client={queryClient}>
+      <AuthProvider>
+        <StatusBar
+          barStyle="dark-content"
+          translucent
+          backgroundColor={"transparent"}
+        />
+        <RootLayoutNav />
+        <Toast />
+      </AuthProvider>
+    </QueryClientProvider>
   );
 };
 
-const RootLayoutNav = ({
-  userUid
-}: {
-  userUid: AuthContextData["userUid"];
-}) => {
-  console.log(userUid);
-  console.log(!userUid);
+const RootLayoutNav = () => {
+  const { user } = useAuth();
+  const router = useRouter();
 
-  if (!userUid) {
-    return (
-      <Stack>
-        <Stack.Screen
-          name="(public)/sign-in"
-          options={{ headerShown: false }}
-        />
-        <Stack.Screen
-          name="(public)/sign-up"
-          options={{ headerShown: false }}
-        />
-      </Stack>
-    );
-  }
+  useEffect(() => {
+    if (user) {
+      router.replace("/(authenticated)/home");
+    } else {
+      router.replace("/(public)/sign-in");
+    }
+  }, [user, router]);
 
   return (
     <Stack>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(public)" options={{ headerShown: false }} />
+      <Stack.Screen name="(authenticated)" options={{ headerShown: false }} />
     </Stack>
   );
 };

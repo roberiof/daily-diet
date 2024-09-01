@@ -1,8 +1,9 @@
 import React from "react";
-import { Text, TouchableOpacity, View } from "react-native";
+import { Text, TouchableOpacity } from "react-native";
 import { tv } from "tailwind-variants";
 
 import { ButtonProps } from "./types";
+import Loading from "../Loading/Loading";
 
 export const buttonVariants = tv({
   base: "py-4 px-6 w-full rounded-[6px] text-center border-1 border-transparent disabled:opacity-30",
@@ -25,6 +26,7 @@ export default function Button({
   children,
   className,
   variant = "contained",
+  loading = false,
   ...rest
 }: ButtonProps) {
   const textVariant = {
@@ -44,18 +46,15 @@ export default function Button({
       })}
       {...rest}
     >
-      <Text
-        className={`text-center font-bold flex items-center gap-2  ${textVariant[variant]}`}
-      >
-        {["greenSelected", "greenNotSelected"].includes(variant) && (
-          <View className="rounded-full w-[10px] h-[10px] bg-green-dark"></View>
-        )}
-        {["redSelected", "redNotSelected"].includes(variant) && (
-          <View className="rounded-full w-[10px] h-[10px] bg-red-dark"></View>
-        )}
-
-        {children}
-      </Text>
+      {loading ? (
+        <Loading />
+      ) : (
+        <Text
+          className={`text-center font-bold flex  gap-2 ${textVariant[variant]}`}
+        >
+          {children}
+        </Text>
+      )}
     </TouchableOpacity>
   );
 }

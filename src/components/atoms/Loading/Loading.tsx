@@ -1,9 +1,9 @@
 import { ActivityIndicator, View } from "react-native";
 
-const Loading = () => {
+const Loading = ({ color = "white" }: { color?: string }) => {
   return (
     <View className="flex-1 items-center justify-center">
-      <ActivityIndicator />
+      <ActivityIndicator color={color} />
     </View>
   );
 };
