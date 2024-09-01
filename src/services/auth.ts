@@ -9,11 +9,15 @@ export const loginWithEmailAndPassword = async (
     await auth().signInWithEmailAndPassword(email, password);
     return { error: null };
   } catch (error: any) {
-    console.error("Error logging in: ", error);
+    console.error("Error logging in: ", error.code);
 
-    let errorMessage = "An unexpected error occurred during login.";
+    let errorMessage =
+      "An unexpected error occurred during login. Try again later";
 
     switch (error.code) {
+      case "auth/invalid-credential":
+        errorMessage = "The credentials are invalid.";
+        break;
       case "auth/invalid-email":
         errorMessage = "The email address is invalid.";
         break;
@@ -27,7 +31,8 @@ export const loginWithEmailAndPassword = async (
         errorMessage = "The password is incorrect.";
         break;
       default:
-        errorMessage = "An unexpected error occurred during login.";
+        errorMessage =
+          "An unexpected error occurred during login. Try again later";
     }
 
     return { error: errorMessage };
@@ -41,8 +46,32 @@ export const createUserWithEmailAndPassword = async (
   try {
     const data = await auth().createUserWithEmailAndPassword(email, password);
     return { error: null, userId: data.user.uid };
+  } catch (error: any) {
+    console.error("Error creating user: ", error);
+
+    let errorMessage =
+      "An unexpected error occurred during login. Try again later";
+
+    switch (error.code) {
+      case "auth/email-already-in-use":
+        errorMessage = "Email already in use.";
+        break;
+      default:
+        errorMessage =
+          "An unexpected error occurred during login. Try again later";
+    }
+    return { error: errorMessage, userId: null };
+  }
+};
+
+export const logout = async (): Promise<{
+  error: null | string;
+}> => {
+  try {
+    await auth().signOut();
+    return { error: null };
   } catch (error) {
     console.error("Error creating user: ", error);
-    return { error: "Error in user creation", userId: null };
+    return { error: "Error in logout" };
   }
 };

@@ -61,17 +61,17 @@ export default function SignUp() {
       data.password
     );
 
-    if (error || !userId) {
+    if (error) {
       Toast.show({
         type: "error",
         text1: "Register failed",
-        text2: "Something went wrong. Try again later!"
+        text2: error
       });
       setLoading(false);
       return;
     }
 
-    setFirestoreDoc<Omit<UserEntity, "id">>(`users/${userId}`, {
+    await setFirestoreDoc<Omit<UserEntity, "id">>(`users/${userId}`, {
       email: data.email,
       name: data.name,
       image: imageUrl
