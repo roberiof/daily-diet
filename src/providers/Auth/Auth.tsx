@@ -16,11 +16,7 @@ const AuthContext = createContext({} as AuthContextData);
 export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [userUid, setUserUid] = useState<string | null | undefined>(null);
   const [initializing, setInitializing] = useState(true);
-  const { data: user, isLoading } = useProfile(userUid ?? undefined);
-
-  // console.log(userUid);
-  // console.log(user);
-  // console.log(isLoading);
+  const { data: user, isLoading, refetch } = useProfile(userUid ?? undefined);
 
   const onAuthStateChanged = async (user: FirebaseAuthTypes.User | null) => {
     if (user) {
@@ -36,6 +32,13 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     const subscriber = auth().onAuthStateChanged(onAuthStateChanged);
     return subscriber;
   }, []);
+
+  useEffect(() => {
+    if (userUid && !user && !isLoading) {
+      console.log("entrei e fiz o refetch");
+      refetch();
+    }
+  }, [userUid, user, refetch, isLoading]);
 
   if (initializing || isLoading) {
     return (
