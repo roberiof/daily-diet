@@ -99,7 +99,9 @@ export const getAllFirestoreDocs = async <T>(
     });
 
     const snapshot = await query.get();
-    const data = snapshot.docs.map((doc) => doc.data() as T);
+    const data = snapshot.docs.map(
+      (doc) => ({ ...doc.data(), id: doc.id }) as T
+    );
     return data;
   } catch (error) {
     if (error instanceof Error) {
