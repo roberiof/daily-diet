@@ -39,7 +39,7 @@ export default function NewMeal() {
     reset
   } = useForm<AddMealForm>({
     resolver: zodResolver(AddMealSchema),
-    values: {
+    defaultValues: {
       isInsideDiet: currentMeal?.isInsideDiet ? "yes" : "no",
       name: currentMeal?.name ?? "",
       date: currentMeal?.date.seconds
