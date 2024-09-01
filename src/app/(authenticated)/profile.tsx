@@ -21,6 +21,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { getProfileQueryKey } from "@/hooks/queries/useProfile";
 import { logout } from "@/services/auth";
 import { Text } from "@/components/atoms/Text/text";
+import { getFilenameFromURI } from "@/utils/getFilenameFromUri";
+import { getFilenameFromFirebaseURL } from "@/utils/getFilenameFromFb";
 
 type EditProfileForm = z.infer<typeof EditProfileSchema>;
 
@@ -58,7 +60,7 @@ export default function SignUp() {
     if (data.image !== user.image) {
       const uploadData = await uploadImageToStorage(
         "/images",
-        data.image,
+        getFilenameFromURI(data.image),
         data.image
       );
 
@@ -73,10 +75,13 @@ export default function SignUp() {
         return;
       }
 
-      await deleteImageFromStorage("/images", user.image);
+      await deleteImageFromStorage(
+        "/images",
+        getFilenameFromFirebaseURL(user.image)
+      );
     }
 
-    updateFirestoreDoc<Omit<UserEntity, "id">>(`users/${user.id}`, {
+    await updateFirestoreDoc<Omit<UserEntity, "id">>(`users/${user.id}`, {
       name: data.name,
       image: imageUrl
     });
@@ -102,9 +107,9 @@ export default function SignUp() {
         </Link>
         <Pressable
           onPress={() => logout()}
-          className="border-red-600 border-2 rounded-[8px] p-2 w-[90px] bg-transparent flex items-center"
+          className="border-red-600  rounded-[8px] p-1 w-[90px] bg-transparent flex items-center"
         >
-          <Text className="text-red-600 text-[16px]">Sign Out</Text>
+          <Text className="text-red-600 text-[16px] font-medium">Sign Out</Text>
         </Pressable>
       </View>
 

@@ -68,8 +68,6 @@ const RootLayoutNav = () => {
   const { user } = useAuth();
   const router = useRouter();
 
-  console.log("root layout", user);
-
   useEffect(() => {
     if (user) {
       router.replace("/(authenticated)/home");

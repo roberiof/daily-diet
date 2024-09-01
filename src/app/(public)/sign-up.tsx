@@ -13,6 +13,7 @@ import { UserEntity } from "@/common/entities/User";
 import { uploadImageToStorage } from "@/services/firebase-storage";
 import { createUserWithEmailAndPassword } from "@/services/auth";
 import { setFirestoreDoc } from "@/services/firestore";
+import { getFilenameFromURI } from "@/utils/getFilenameFromUri";
 
 type SignUpForm = z.infer<typeof SignUpFormSchema>;
 
@@ -41,7 +42,7 @@ export default function SignUp() {
 
     const uploadData = await uploadImageToStorage(
       "/images",
-      data.image,
+      getFilenameFromURI(data.image),
       data.image
     );
 
