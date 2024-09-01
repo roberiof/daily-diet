@@ -50,7 +50,7 @@ export default function StatsMeals() {
     <View
       className={cn(
         "flex-1 pt-12 space-y-8",
-        percentageMeals > 80 ? "bg-green-light" : "bg-red-light"
+        percentageMeals >= 80 ? "bg-green-light" : "bg-red-light"
       )}
     >
       <View className="relative text-center flex justify-center flex-row mx-4">
@@ -58,7 +58,7 @@ export default function StatsMeals() {
           <AntDesign
             name="arrowleft"
             size={24}
-            color={percentageMeals > 80 ? "#639339" : "#BF3B44"}
+            color={percentageMeals >= 80 ? "#639339" : "#BF3B44"}
           />
         </Link>
         <View className="text-[18px] font-bold flex items-center pb-4 pt-8 space-y-1">
@@ -66,20 +66,20 @@ export default function StatsMeals() {
             {percentageMeals}%
           </Text>
           <Text className="text-[14px] font-normal text-base-gray-600">
-            das refeições dentro da dieta
+            meals inside diet
           </Text>
         </View>
       </View>
       <View className="rounded-t-[20px] bg-white h-[80%] px-6 py-8 flex flex-col space-y-4">
         <Text className="text-center  text-base-gray-700 text-[14px] font-bold">
-          Estatísticas Gerais
+          General Statistics
         </Text>
         <View className="flex items-center p-4 space-y-1 rounded-[12px] bg-base-gray-200">
           <Text className="text-base-gray-700 font-bold text-[24px]">
             {bestStreak}
           </Text>
           <Text className="text-[14px] font-normal text-base-gray-600">
-            melhor sequência de pratos dentro da dieta{" "}
+            best streak of meals inside diet{" "}
           </Text>
         </View>
         <View className="flex items-center p-4 space-y-1 rounded-[12px] bg-base-gray-200">
@@ -87,7 +87,7 @@ export default function StatsMeals() {
             {meals.length}
           </Text>
           <Text className="text-[14px] font-normal text-base-gray-600">
-            refeições registradas{" "}
+            registered meals
           </Text>
         </View>
 
@@ -97,7 +97,7 @@ export default function StatsMeals() {
               {mealsInsideDiet}
             </Text>
             <Text className="text-[14px] font-normal text-base-gray-600 text-center">
-              refeições dentro da dieta{" "}
+              meals inside diet
             </Text>
           </View>
           <View className="flex w-[48%] items-center p-4 space-y-1 rounded-[12px] bg-red-light">
@@ -105,7 +105,7 @@ export default function StatsMeals() {
               {mealsNotInsideDiet}
             </Text>
             <Text className="text-[14px] font-normal text-base-gray-600 text-center">
-              refeições fora da dieta{" "}
+              meals out of diet
             </Text>
           </View>
         </View>

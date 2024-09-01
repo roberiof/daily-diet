@@ -25,7 +25,7 @@ export const groupMealsByDate = (meals: MealEntity[]): MealsByDate[] => {
 
     groupedMeals[dateKey].meals.push(meal);
     groupedMeals[dateKey]["meals"] = groupedMeals[dateKey].meals.sort(
-      (a, b) => b.date - a.date
+      (a, b) => b.date.seconds - a.date.seconds
     );
   });
 

@@ -28,11 +28,11 @@ export default function Home() {
       <View className="px-4 space-y-8">
         <PercentageMeals percentage={percentageMeals} />
         <View className="space-y-2">
-          <Text>Refeições</Text>
+          <Text>Meals</Text>
           <Button onPress={() => router.push("/new-meal")}>
             <View className="flex flex-row items-center gap-2">
               <AntDesign name="plus" size={20} color="white" />
-              <Text className="text-white font-bold">Nova refeição</Text>
+              <Text className="text-white font-bold">New meal</Text>
             </View>
           </Button>
         </View>

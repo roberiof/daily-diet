@@ -29,7 +29,7 @@ const PercentageMeals = ({ percentage }: PercentageMealsProps) => {
           {percentage}%
         </Text>
         <Text className="text-base-gray-600 text-[14px]">
-          das refeições dentro da dieta
+          meals inside diet
         </Text>
       </View>
     </View>
