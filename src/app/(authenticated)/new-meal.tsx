@@ -119,6 +119,7 @@ export default function NewMeal() {
           <DatePickerModal
             label="Date and Hour"
             control={control}
+            editable={!isEditing}
             name="date"
             className="w-full"
           />

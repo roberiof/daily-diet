@@ -1,6 +1,9 @@
-import { useUserMeals } from "@/hooks/queries/useUserMeals";
-import { useState } from "react";
-import { TouchableOpacity, View } from "react-native";
+import {
+  getUserMealsQueryKey,
+  useUserMeals
+} from "@/hooks/queries/useUserMeals";
+import React from "react";
+import { Alert, TouchableOpacity, View } from "react-native";
 import { useAuthenticated } from "../../../templates/Authenticated/provider/AuthenticatedContext";
 import { cn } from "@/lib/utils";
 import { Link, router, useLocalSearchParams } from "expo-router";
@@ -8,15 +11,37 @@ import Feather from "@expo/vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 import { Text } from "@/components/atoms/Text/text";
-import DeleteMealModal from "@/components/atoms/DeleteMealModal/deleteMealModal";
+import { MealEntity } from "@/common/entities/Meal";
+import { deleteFirestoreDoc } from "@/services/firestore";
+import { useQueryClient } from "@tanstack/react-query";
 
 export default function SeeMeal() {
-  const [isOpen, setIsOpen] = useState(false);
+  const queryClient = useQueryClient();
   const { mealId } = useLocalSearchParams();
   const { user } = useAuthenticated();
   const { data: meals } = useUserMeals({ userId: user.id });
-  const currentMeal = meals?.find((meal) => meal.id === mealId);
+  const currentMeal = meals?.find((meal) => meal.id === mealId) as MealEntity;
   const currentMealDate = new Date(currentMeal?.date.seconds * 1000);
+
+  const onRemove = () => {
+    Alert.alert("", "Are you sure you want to remove this meal", [
+      {
+        text: "Cancel",
+        style: "cancel"
+      },
+      {
+        text: "Confirm",
+        style: "destructive",
+        onPress: async () => {
+          await deleteFirestoreDoc(`meals/${currentMeal.id}`);
+          queryClient.invalidateQueries({
+            queryKey: getUserMealsQueryKey(user.id)
+          });
+          router.push("/home");
+        }
+      }
+    ]);
+  };
 
   if (!meals || !currentMeal) return;
 
@@ -71,15 +96,13 @@ export default function SeeMeal() {
             <Feather name="edit-2" size={18} color="white" />
             <Text className="text-white  font-medium">Edit meal</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="border-base-gray-700 border bg-transparent py-4 px-6 w-full rounded-[6px] text-center disabled:opacity-30 flex items-center justify-center flex-row space-x-4">
+          <TouchableOpacity
+            className="border-base-gray-700 border bg-transparent py-4 px-6 w-full rounded-[6px] text-center disabled:opacity-30 flex items-center justify-center flex-row space-x-4"
+            onPress={onRemove}
+          >
             <Feather name="trash-2" size={18} color="#1b1d1e" />
             <Text className="text-base-gray-700 font-medium">Remove meal</Text>
           </TouchableOpacity>
-          <DeleteMealModal
-            mealId={mealId as string}
-            isOpen={isOpen}
-            onClose={() => setIsOpen(false)}
-          />
         </View>
       </View>
     </View>

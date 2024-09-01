@@ -12,6 +12,7 @@ export default function DatePickerField({
   label,
   className,
   control,
+  editable = true,
   name
 }: DatePickerFieldProps) {
   const [open, setOpen] = useState(false);
@@ -27,10 +28,12 @@ export default function DatePickerField({
       <View className="space-y-1">
         <Text>{label}</Text>
         <Button
+          disabled={!editable}
           variant="outlined"
           className={cn(
-            "px-6 py-3 pt-4 rounded-lg border-2 items-start justify-center text-start  m-0 border-dark-green-200",
+            "px-6 py-3 pt-4 rounded-lg border-2 items-start justify-center text-start   m-0 border-dark-green-200",
             error ? "border-red-600" : "border-dark-green-200",
+            !editable && "opacity-50",
             className
           )}
           onPress={() => setOpen(true)}

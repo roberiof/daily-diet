@@ -7,4 +7,5 @@ export interface DatePickerFieldProps {
   className?: string;
   error?: string | null;
   label: string;
+  editable?: boolean;
 }
