@@ -11,7 +11,8 @@ import { cn } from "@/lib/utils";
 const ImagePicker = <T extends FieldValues>({
   control,
   name,
-  error
+  error,
+  editable = true
 }: ImagePickerProps<T>) => {
   const pickImage = (onChange: (...event: any[]) => void) => {
     launchImageLibrary(
@@ -41,6 +42,7 @@ const ImagePicker = <T extends FieldValues>({
       render={({ field: { onChange, value } }) => (
         <View className="justify-center items-center w-full">
           <Pressable
+            disabled={!editable}
             onPress={() => pickImage(onChange)}
             className={cn(
               "relative w-[100px] h-[100px] border-2 border-black p-2 rounded-full text-center px-5 py-2 border-dark-green-200 flex items-center justify-center",
@@ -53,9 +55,11 @@ const ImagePicker = <T extends FieldValues>({
                   source={{ uri: value }}
                   className="w-[100px] h-[100px] border-2 border-black rounded-full peer"
                 />
-                <View className="rounded-full bg-white w-[30px] h-[30px] absolute right-0 border border-black -bottom-2 flex items-center justify-center">
-                  <Entypo name="cycle" size={18} color="black" />
-                </View>
+                {editable && (
+                  <View className="rounded-full bg-white w-[30px] h-[30px] absolute right-0 border border-black -bottom-2 flex items-center justify-center">
+                    <Entypo name="cycle" size={18} color="black" />
+                  </View>
+                )}
               </>
             ) : (
               <Entypo

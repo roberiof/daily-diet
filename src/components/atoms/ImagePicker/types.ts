@@ -4,4 +4,5 @@ export interface ImagePickerProps<T extends FieldValues> {
   name: Path<T>;
   control: Control<T>;
   error?: string;
+  editable?: boolean;
 }

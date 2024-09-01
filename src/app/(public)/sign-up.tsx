@@ -1,7 +1,7 @@
 import { View, Text, ScrollView } from "react-native";
 import React, { useState } from "react";
 import { z } from "zod";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import Toast from "react-native-toast-message";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -83,7 +83,6 @@ export default function SignUp() {
       text2: "You were register successfully!"
     });
     reset();
-    router.push("/(authenticated)/home");
     setLoading(true);
   };
 
@@ -97,6 +96,7 @@ export default function SignUp() {
           control={control}
           name={"image"}
           error={errors["image"]?.message}
+          editable={!loading}
         />
         <View className="w-full" style={{ gap: 16 }}>
           <Input
@@ -126,7 +126,7 @@ export default function SignUp() {
           />
           <Input
             editable={!loading}
-            error={errors["password"]?.message}
+            error={errors["confirmPassword"]?.message}
             control={control}
             name="confirmPassword"
             label="Confirmation Password"
@@ -136,7 +136,7 @@ export default function SignUp() {
         </View>
 
         <Button onPress={handleSubmit(handleForm)} disabled={loading}>
-          Sign In
+          Sign up
         </Button>
 
         <Text>

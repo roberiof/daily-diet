@@ -7,7 +7,7 @@ import Button from "@atoms/Button/Button";
 import Input from "@atoms/Input/Input";
 import logo from "@assets/public/logo-bigger.png";
 import SignInFormSchema from "@/validations/signIn";
-import { Link, router } from "expo-router";
+import { Link } from "expo-router";
 import Toast from "react-native-toast-message";
 import { loginWithEmailAndPassword } from "@/services/auth";
 
@@ -35,19 +35,12 @@ export default function SignIn() {
       Toast.show({
         type: "error",
         text1: "Sign in failed",
-        text2: "Something went wrong, try again later"
+        text2: error
       });
       setLoading(false);
       return;
     }
-
-    Toast.show({
-      type: "success",
-      text1: "Welcome back!",
-      text2: "You're being redirected to home page"
-    });
     reset();
-    router.push("/(authenticated)/home");
     setLoading(false);
   };
 
