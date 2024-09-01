@@ -1,15 +1,17 @@
 import { useUserMeals } from "@/hooks/queries/useUserMeals";
+import { useState } from "react";
 import { TouchableOpacity, View } from "react-native";
 import { useAuthenticated } from "../../../templates/Authenticated/provider/AuthenticatedContext";
-import React from "react";
 import { cn } from "@/lib/utils";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import Feather from "@expo/vector-icons/Feather";
 import AntDesign from "@expo/vector-icons/AntDesign";
 
 import { Text } from "@/components/atoms/Text/text";
+import DeleteMealModal from "@/components/atoms/DeleteMealModal/deleteMealModal";
 
 export default function SeeMeal() {
+  const [isOpen, setIsOpen] = useState(false);
   const { mealId } = useLocalSearchParams();
   const { user } = useAuthenticated();
   const { data: meals } = useUserMeals({ userId: user.id });
@@ -69,10 +71,15 @@ export default function SeeMeal() {
             <Feather name="edit-2" size={18} color="white" />
             <Text className="text-white  font-medium">Edit meal</Text>
           </TouchableOpacity>
-          <TouchableOpacity className="border-base-gray-700 border bg-transparent py-4 px-6 w-full rounded-[6px] text-center disabled:opacity-30 flex items-center justify-center flex-row space-x-4 ">
+          <TouchableOpacity className="border-base-gray-700 border bg-transparent py-4 px-6 w-full rounded-[6px] text-center disabled:opacity-30 flex items-center justify-center flex-row space-x-4">
             <Feather name="trash-2" size={18} color="#1b1d1e" />
             <Text className="text-base-gray-700 font-medium">Remove meal</Text>
           </TouchableOpacity>
+          <DeleteMealModal
+            mealId={mealId as string}
+            isOpen={isOpen}
+            onClose={() => setIsOpen(false)}
+          />
         </View>
       </View>
     </View>
