@@ -15,8 +15,7 @@ export default function Home() {
   const { data: meals } = useUserMeals({ userId: user.id });
 
   const percentageMeals = useMemo(() => {
-    if (!meals) return 0;
-
+    if (!meals?.length) return 0;
     return Math.ceil(
       (meals.filter((m) => m.isInsideDiet).length / meals.length) * 100
     );
@@ -26,7 +25,17 @@ export default function Home() {
     <View className="flex-1">
       <Header />
       <View className="px-4 space-y-8">
-        <PercentageMeals percentage={percentageMeals} />
+        {!meals || meals?.length === 0 ? (
+          <View
+            className={
+              "w-full flex  justify-center items-center rounded-[8px] px-4 py-5 h-[100px] bg-base-gray-300"
+            }
+          >
+            <Text className="font-medium">Add your first meal</Text>
+          </View>
+        ) : (
+          <PercentageMeals percentage={percentageMeals} />
+        )}
         <View className="space-y-2">
           <Text>Meals</Text>
           <Button onPress={() => router.push("/new-meal")}>
