@@ -71,7 +71,7 @@ export default function NewMeal() {
       });
       reset();
     }
-    queryClient.invalidateQueries({
+    await queryClient.invalidateQueries({
       queryKey: getUserMealsQueryKey(user.id)
     });
 

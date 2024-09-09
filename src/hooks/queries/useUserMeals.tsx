@@ -8,7 +8,14 @@ export const getUserMealsQueryKey = (
   afterDate?: Date,
   limitNumber?: number
 ) => {
-  return ["meals", userId, afterDate, limitNumber];
+  const base: string[] = ["meals", userId];
+  if (limitNumber) {
+    base.push(limitNumber.toString());
+  }
+  if (afterDate) {
+    base.push(afterDate.toLocaleDateString());
+  }
+  return base;
 };
 
 export const getUserMealsQueryFn = (
@@ -53,18 +60,13 @@ export const useUserMeals = ({
   afterDate,
   limitNumber
 }: {
-  userId: string | undefined;
+  userId: string;
   afterDate?: Date;
   limitNumber?: number;
 }) => {
   return useQuery({
-    queryKey: userId
-      ? getUserMealsQueryKey(userId, afterDate, limitNumber)
-      : [],
-    queryFn: userId
-      ? getUserMealsQueryFn(userId, afterDate, limitNumber)
-      : undefined,
-    staleTime: 1000 * 60 * 45, // 45 minutes
-    enabled: !!userId
+    queryKey: getUserMealsQueryKey(userId, afterDate, limitNumber),
+    queryFn: getUserMealsQueryFn(userId, afterDate, limitNumber),
+    staleTime: 1000 * 60 * 45 // 45 minutes
   });
 };

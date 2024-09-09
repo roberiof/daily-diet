@@ -11,7 +11,8 @@ import { StatusBar } from "react-native";
 import Loading from "@/components/atoms/Loading/Loading";
 import { AuthProvider, useAuth } from "@/providers/Auth/Auth";
 import Toast from "react-native-toast-message";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { clientPersister, clientQuery } from "@/lib/react-query";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
 
 export {
   // Catch any errors thrown by the Layout component.
@@ -25,8 +26,6 @@ export const unstable_settings = {
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
-
-const queryClient = new QueryClient();
 
 const RootLayout = () => {
   const [loaded, error] = useFonts({
@@ -50,7 +49,10 @@ const RootLayout = () => {
   }
 
   return (
-    <QueryClientProvider client={queryClient}>
+    <PersistQueryClientProvider
+      client={clientQuery}
+      persistOptions={{ persister: clientPersister }}
+    >
       <AuthProvider>
         <StatusBar
           barStyle="dark-content"
@@ -60,7 +62,7 @@ const RootLayout = () => {
         <RootLayoutNav />
         <Toast />
       </AuthProvider>
-    </QueryClientProvider>
+    </PersistQueryClientProvider>
   );
 };
 
