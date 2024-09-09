@@ -35,7 +35,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     if (userUid && !user && !isLoading) {
-      console.log("entrei e fiz o refetch");
       refetch();
     }
   }, [userUid, user, refetch, isLoading]);

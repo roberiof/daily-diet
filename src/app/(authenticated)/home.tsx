@@ -3,7 +3,7 @@ import Header from "@/components/molecules/Header/Header";
 import PercentageMeals from "@/components/molecules/PercentageMeals/PercentageMeals";
 import { router } from "expo-router";
 import React, { useMemo } from "react";
-import { View } from "react-native";
+import { ActivityIndicator, View } from "react-native";
 import { useAuthenticated } from "../../../templates/Authenticated/provider/AuthenticatedContext";
 import PaginatedMealCardsDates from "@/components/organisms/PaginatedMealCardsDates/PaginatedMealCardsDates";
 import Button from "@/components/atoms/Button/Button";
@@ -12,7 +12,7 @@ import { useUserMeals } from "@/hooks/queries/useUserMeals";
 
 export default function Home() {
   const { user } = useAuthenticated();
-  const { data: meals } = useUserMeals({ userId: user.id });
+  const { data: meals, isFetching } = useUserMeals({ userId: user.id });
 
   const percentageMeals = useMemo(() => {
     if (!meals?.length) return 0;
@@ -45,8 +45,14 @@ export default function Home() {
             </View>
           </Button>
         </View>
-        <View className="h-[60%]">
-          <PaginatedMealCardsDates userId={user.id} />
+        <View className="h-[60%] ">
+          {isFetching ? (
+            <View className="flex justify-center items-center h-full">
+              <ActivityIndicator color="black" size={"large"} />
+            </View>
+          ) : (
+            <PaginatedMealCardsDates userId={user.id} />
+          )}
         </View>
       </View>
     </View>
